@@ -1,3 +1,52 @@
+/* ===================== Theme Variables =====================
+   Change the site's whole look from here. Everything below (splash,
+   home screen, cards, buttons, dark mode) reads from these.
+*/
+
+:root{
+
+/* Background gradient (splash + page background) */
+--grad-1:#667eea;
+--grad-2:#764ba2;
+--grad-3:#6a11cb;
+--grad-4:#2575fc;
+
+/* Glass panels (container, cards, modals) */
+--glass-bg:rgba(255,255,255,.15);
+--glass-bg-strong:rgba(255,255,255,.25);
+--glass-border:rgba(255,255,255,.25);
+
+/* Text */
+--text-color:#ffffff;
+--text-muted:rgba(255,255,255,.8);
+
+/* Action buttons */
+--accent-preview:#2196f3;
+--accent-download:#00c853;
+--accent-share:#ff9800;
+
+/* Card left-border accent colors (cycled per card) */
+--card-accent-1:#ff6b6b;
+--card-accent-2:#ffd93d;
+--card-accent-3:#6bcb77;
+--card-accent-4:#4d96ff;
+--card-accent-5:#ff922b;
+--card-accent-6:#cc5de8;
+
+/* Floating decorative blobs */
+--blob-1:#ff6b6b;
+--blob-2:#4ecdc4;
+--blob-3:#ffe66d;
+
+/* Dark mode */
+--dark-bg:#121212;
+--dark-panel:rgba(20,20,20,.8);
+--dark-panel-strong:rgba(20,20,20,.95);
+--dark-card:rgba(255,255,255,.05);
+--dark-card-hover:rgba(255,255,255,.08);
+
+}
+
 /* Splash Screen */
 
 #splash{
@@ -12,10 +61,10 @@ height:100%;
 
 background:linear-gradient(
     -45deg,
-    #667eea,
-    #764ba2,
-    #6a11cb,
-    #2575fc
+    var(--grad-1),
+    var(--grad-2),
+    var(--grad-3),
+    var(--grad-4)
 );
 
 background-size:400% 400%;
@@ -269,7 +318,7 @@ animation:fadeIn .3s ease;
 
 .dark .auth-modal{
 
-background:rgba(20,20,20,.95);
+background:var(--dark-panel-strong);
 
 }
 
@@ -741,13 +790,13 @@ background:linear-gradient(
 
     -45deg,
 
-    #667eea,
+    var(--grad-1),
 
-    #764ba2,
+    var(--grad-2),
 
-    #6a11cb,
+    var(--grad-3),
 
-    #2575fc
+    var(--grad-4)
 
 );
 
@@ -849,7 +898,7 @@ width:260px;
 
 height:260px;
 
-background:#ff6b6b;
+background:var(--blob-1);
 
 top:10%;
 
@@ -865,7 +914,7 @@ width:320px;
 
 height:320px;
 
-background:#4ecdc4;
+background:var(--blob-2);
 
 bottom:10%;
 
@@ -881,7 +930,7 @@ width:220px;
 
 height:220px;
 
-background:#ffe66d;
+background:var(--blob-3);
 
 top:40%;
 
@@ -1063,7 +1112,7 @@ background:rgba(255,255,255,.3);
 
 .dark .profile-menu{
 
-background:rgba(20,20,20,.95);
+background:var(--dark-panel-strong);
 
 }
 
@@ -1206,16 +1255,19 @@ padding:20px;
 transition:
 
 background .25s ease,
-box-shadow .25s ease;
+box-shadow .25s ease,
+transform .25s ease;
+
+will-change:transform;
 
 }
 
-.note-card:nth-child(1){ border-left-color:#ff6b6b; }
-.note-card:nth-child(2){ border-left-color:#ffd93d; }
-.note-card:nth-child(3){ border-left-color:#6bcb77; }
-.note-card:nth-child(4){ border-left-color:#4d96ff; }
-.note-card:nth-child(5){ border-left-color:#ff922b; }
-.note-card:nth-child(6){ border-left-color:#cc5de8; }
+.note-card:nth-child(1){ border-left-color:var(--card-accent-1); }
+.note-card:nth-child(2){ border-left-color:var(--card-accent-2); }
+.note-card:nth-child(3){ border-left-color:var(--card-accent-3); }
+.note-card:nth-child(4){ border-left-color:var(--card-accent-4); }
+.note-card:nth-child(5){ border-left-color:var(--card-accent-5); }
+.note-card:nth-child(6){ border-left-color:var(--card-accent-6); }
 
 
 
@@ -1296,6 +1348,10 @@ max-height .3s ease,
 opacity .25s ease,
 transform .25s ease,
 margin-top .25s ease;
+
+will-change:max-height, opacity, transform;
+
+transform:translateZ(0);
 
 }
 
@@ -1413,7 +1469,7 @@ box-shadow:
 
 .preview-btn{
 
-background:#2196f3;
+background:var(--accent-preview);
 
 }
 
@@ -1421,7 +1477,7 @@ background:#2196f3;
 
 .download-btn{
 
-background:#00c853;
+background:var(--accent-download);
 
 }
 
@@ -1429,7 +1485,7 @@ background:#00c853;
 
 .share-btn{
 
-background:#ff9800;
+background:var(--accent-share);
 
 }
 
@@ -1635,7 +1691,7 @@ box-shadow:
 
 .dark{
 
-background:#121212 !important;
+background:var(--dark-bg) !important;
 
 animation:none !important;
 
@@ -1645,7 +1701,7 @@ animation:none !important;
 
 .dark .container{
 
-background:rgba(20,20,20,.8);
+background:var(--dark-panel);
 
 border:1px solid rgba(255,255,255,.08);
 
@@ -1655,7 +1711,7 @@ border:1px solid rgba(255,255,255,.08);
 
 .dark .note-card{
 
-background:rgba(255,255,255,.05);
+background:var(--dark-card);
 
 }
 
@@ -1663,7 +1719,7 @@ background:rgba(255,255,255,.05);
 
 .dark .note-card:hover{
 
-background:rgba(255,255,255,.08);
+background:var(--dark-card-hover);
 
 }
 
@@ -1695,7 +1751,7 @@ color:white;
 
         background-size:200% 200%;
 
-        animation:gradientBG 35s linear infinite;
+        animation:none;
 
     }
 

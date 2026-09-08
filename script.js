@@ -901,3 +901,37 @@ window.addEventListener(
 
     }
 );
+
+/* ===================== Back/Forward Cache Guard =====================
+
+   When the browser restores this page from bfcache (e.g. tapping the
+   back button after visiting a link, or the OS reviving a suspended
+   tab), it re-shows the exact DOM as it was left — including "notes
+   page visible" — WITHOUT re-running our normal load logic. That is
+   what caused the site to sometimes open straight onto the notes page
+   instead of the enter screen.
+
+   Fix: whenever a bfcache restore happens, snap the DOM back to the
+   landing screen. currentSession/authInitialized already reflect the
+   real login state in memory, so this only resets what's on screen —
+   it doesn't log anyone out. */
+
+window.addEventListener("pageshow", (event) => {
+
+    if (!event.persisted) {
+        return;
+    }
+
+    const home = document.getElementById("homeScreen");
+    const notes = document.getElementById("notesSection");
+
+    home.style.display = "";
+    home.classList.remove("hide-home");
+
+    notes.classList.remove("notes-visible");
+    notes.classList.remove("leaving");
+    notes.classList.add("hidden");
+
+    document.getElementById("splash").classList.add("hide");
+
+});
