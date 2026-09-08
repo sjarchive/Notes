@@ -6,10 +6,10 @@
 :root{
 
 /* Background gradient (splash + page background) */
---grad-1:#667eea;
---grad-2:#764ba2;
---grad-3:#6a11cb;
---grad-4:#2575fc;
+--grad-1:#3a1c71;
+--grad-2:#4568dc;
+--grad-3:#00c9ff;
+--grad-4:#00b09b;
 
 /* Glass panels (container, cards, modals) */
 --glass-bg:rgba(255,255,255,.15);
@@ -802,9 +802,9 @@ background:linear-gradient(
 
 
 
-background-size:200% 200%;
+background-size:100% 100%;
 
-animation:gradientBG 35s linear infinite;
+animation:none;
 
 
 
@@ -1746,12 +1746,6 @@ color:white;
     body{
 
         padding:15px;
-
-
-
-        background-size:200% 200%;
-
-        animation:none;
 
     }
 
