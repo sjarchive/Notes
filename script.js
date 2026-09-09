@@ -954,15 +954,28 @@ function toggleCard(card) {
 
     if (isActive) {
 
-        actions.addEventListener("transitionend", function onOpenEnd(e) {
+        let revealed = false;
 
-            if (e.propertyName === "max-height" && card.classList.contains("active")) {
+        const reveal = () => {
+            if (!revealed && card.classList.contains("active")) {
+                revealed = true;
                 actions.classList.add("overflow-visible");
             }
+        };
 
+        actions.addEventListener("transitionend", function onOpenEnd(e) {
+
+            if (e.propertyName !== "max-height") {
+                return;
+            }
+
+            reveal();
             actions.removeEventListener("transitionend", onOpenEnd);
 
         });
+
+        // Fallback in case transitionend doesn't fire (e.g. reduced-motion).
+        setTimeout(reveal, 320);
 
     }
 
