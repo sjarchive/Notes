@@ -1499,6 +1499,8 @@ font-weight:bold;
 
 cursor:pointer;
 
+touch-action:manipulation;
+
 
 
 transition:.3s;
@@ -1552,6 +1554,14 @@ background:var(--accent-download);
 .share-btn{
 
 background:var(--accent-share);
+
+}
+
+.actions button:disabled{
+
+    opacity:.6;
+
+    cursor:default;
 
 }
 

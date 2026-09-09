@@ -419,6 +419,31 @@ async function loadNotes() {
 
 }
 
+/* Give a button instant visual feedback on tap, and run its action.
+   Keeps the button from feeling unresponsive while a network call is
+   still in flight, and stops double-taps from firing it twice. */
+function withTapFeedback(button, originalLabel, action) {
+
+    return async () => {
+
+        if (button.disabled) {
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "⏳ " + originalLabel.replace(/^\S+\s/, "");
+
+        try {
+            await action();
+        } finally {
+            button.disabled = false;
+            button.textContent = originalLabel;
+        }
+
+    };
+
+}
+
 function renderNotesGrid() {
 
     const grid = document.getElementById("notesGrid");
@@ -445,19 +470,19 @@ function renderNotesGrid() {
         previewBtn.className = "preview-btn";
         previewBtn.setAttribute("aria-label", `View ${note.title} PDF`);
         previewBtn.textContent = "👁️ View";
-        previewBtn.addEventListener("click", () => previewPDF(note.filename));
+        previewBtn.addEventListener("click", withTapFeedback(previewBtn, "👁️ View", () => previewPDF(note.filename)));
 
         const downloadBtn = document.createElement("button");
         downloadBtn.className = "download-btn";
         downloadBtn.setAttribute("aria-label", `Download ${note.title} PDF`);
         downloadBtn.textContent = "⬇️ Download";
-        downloadBtn.addEventListener("click", () => downloadPDF(note.filename));
+        downloadBtn.addEventListener("click", withTapFeedback(downloadBtn, "⬇️ Download", () => downloadPDF(note.filename)));
 
         const shareBtn = document.createElement("button");
         shareBtn.className = "share-btn";
         shareBtn.setAttribute("aria-label", `Share ${note.title} PDF`);
         shareBtn.textContent = "🔗 Share";
-        shareBtn.addEventListener("click", () => shareFile(note.filename));
+        shareBtn.addEventListener("click", withTapFeedback(shareBtn, "🔗 Share", () => shareFile(note.filename)));
 
         actions.appendChild(previewBtn);
         actions.appendChild(downloadBtn);
@@ -711,10 +736,17 @@ async function getSignedFileUrl(file, kind) {
 
 async function previewPDF(file) {
 
+    // Open the tab synchronously, in direct response to the tap — if we wait
+    // for the fetch first, mobile Safari no longer counts it as a trusted
+    // user gesture and will delay or block the popup.
+    const newTab = window.open("", "_blank");
+
     const url = await getSignedFileUrl(file, "access");
 
-    if (url) {
-        window.open(url, "_blank");
+    if (url && newTab) {
+        newTab.location.href = url;
+    } else if (newTab) {
+        newTab.close();
     }
 
 }
