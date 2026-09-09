@@ -436,6 +436,7 @@ function renderNotesGrid() {
         h2.addEventListener("click", () => toggleCard(card));
 
         card.addEventListener("click", () => raiseCard(card));
+        card.addEventListener("touchstart", () => raiseCard(card), { passive: true });
 
         const actions = document.createElement("div");
         actions.className = "actions";
