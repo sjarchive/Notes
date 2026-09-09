@@ -435,6 +435,8 @@ function renderNotesGrid() {
         h2.append(note.title);
         h2.addEventListener("click", () => toggleCard(card));
 
+        card.addEventListener("click", () => raiseCard(card));
+
         const actions = document.createElement("div");
         actions.className = "actions";
 
@@ -850,6 +852,33 @@ document.addEventListener(
 
     }
 );
+
+/* Raised card on click (stays raised until you click elsewhere) */
+
+function raiseCard(card) {
+
+    document.querySelectorAll(".note-card").forEach(c => {
+
+        if (c !== card) {
+            c.classList.remove("raised");
+        }
+
+    });
+
+    card.classList.add("raised");
+
+}
+
+document.addEventListener("click", (event) => {
+
+    if (!event.target.closest(".note-card")) {
+
+        document.querySelectorAll(".note-card.raised")
+            .forEach(c => c.classList.remove("raised"));
+
+    }
+
+});
 
 /* Collapsible Cards */
 

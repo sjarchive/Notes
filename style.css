@@ -1350,7 +1350,8 @@ padding-bottom:24px;
 
 
 
-.note-card:hover{
+.note-card:hover,
+.note-card.raised{
 
 transform:translateY(-6px);
 
@@ -1800,7 +1801,8 @@ background:var(--dark-card);
 
 
 
-.dark .note-card:hover{
+.dark .note-card:hover,
+.dark .note-card.raised{
 
 background:var(--dark-card-hover);
 
