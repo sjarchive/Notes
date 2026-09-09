@@ -926,6 +926,11 @@ function toggleCard(card) {
 
             c.classList.remove("active");
 
+            const otherActions = c.querySelector(".actions");
+            if (otherActions) {
+                otherActions.classList.remove("overflow-visible");
+            }
+
             const arrow = c.querySelector(".arrow");
 
             if (arrow) {
@@ -938,10 +943,33 @@ function toggleCard(card) {
 
     card.classList.toggle("active");
 
+    const isActive = card.classList.contains("active");
+
+    const actions = card.querySelector(".actions");
+
+    // Keep overflow clipped while the panel grows/shrinks so the height
+    // transition stays smooth, then reveal it once fully open so button
+    // shadows aren't cut off by the container's edge.
+    actions.classList.remove("overflow-visible");
+
+    if (isActive) {
+
+        actions.addEventListener("transitionend", function onOpenEnd(e) {
+
+            if (e.propertyName === "max-height" && card.classList.contains("active")) {
+                actions.classList.add("overflow-visible");
+            }
+
+            actions.removeEventListener("transitionend", onOpenEnd);
+
+        });
+
+    }
+
     const arrow = card.querySelector(".arrow");
 
     arrow.textContent =
-        card.classList.contains("active")
+        isActive
             ? "▲"
             : "▼";
 
