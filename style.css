@@ -123,6 +123,27 @@ visibility:hidden;
 
 }
 
+.dark #splash{
+
+background:linear-gradient(
+    -45deg,
+    var(--dark-grad-1),
+    var(--dark-grad-2),
+    var(--dark-grad-3),
+    var(--dark-grad-4)
+);
+background:linear-gradient(
+    -45deg in oklch,
+    var(--dark-grad-1),
+    var(--dark-grad-2),
+    var(--dark-grad-3),
+    var(--dark-grad-4)
+);
+
+background-size:400% 400%;
+
+}
+
 .splash-content{
 
 text-align:center;

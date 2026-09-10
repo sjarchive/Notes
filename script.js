@@ -472,6 +472,14 @@ function renderNotesGrid() {
         const actionsInner = document.createElement("div");
         actionsInner.className = "actions-inner";
 
+        // Hovering the buttons should raise the card too, but the mobile
+        // media query below deliberately disables the plain CSS :hover lift
+        // (:not(.raised)) to stop cards getting stuck raised after a tap.
+        // Firing raiseCard() here adds the .raised class directly, which
+        // that rule always respects, so hovering the buttons lifts the
+        // card on both mobile and desktop.
+        actionsInner.addEventListener("mouseenter", () => raiseCard(card));
+
         const previewBtn = document.createElement("button");
         previewBtn.className = "preview-btn";
         previewBtn.setAttribute("aria-label", `View ${note.title} PDF`);
