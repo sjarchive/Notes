@@ -466,19 +466,23 @@ function renderNotesGrid() {
         // starts on touch, expand starts later on click) which read as
         // jitter. Letting click drive both keeps them in the same frame.
 
+        // Hovering anywhere on the card raises it — same raiseCard() the
+        // click uses, so it also lowers whichever other card was raised
+        // (even if that one is still expanded/active) and works over the
+        // buttons too, since mouseenter fires on entering the card's box
+        // from outside regardless of which descendant is under the pointer.
+        // This also bypasses the mobile media query's
+        // .note-card:hover:not(.raised) rule (added to stop cards getting
+        // stuck raised after a tap), since it only excludes hover styling
+        // when .raised is absent — here we add .raised directly.
+        card.addEventListener("mouseenter", () => raiseCard(card));
+
         const actions = document.createElement("div");
         actions.className = "actions";
 
         const actionsInner = document.createElement("div");
         actionsInner.className = "actions-inner";
 
-        // Hovering the buttons should raise the card too, but the mobile
-        // media query below deliberately disables the plain CSS :hover lift
-        // (:not(.raised)) to stop cards getting stuck raised after a tap.
-        // Firing raiseCard() here adds the .raised class directly, which
-        // that rule always respects, so hovering the buttons lifts the
-        // card on both mobile and desktop.
-        actionsInner.addEventListener("mouseenter", () => raiseCard(card));
 
         const previewBtn = document.createElement("button");
         previewBtn.className = "preview-btn";
