@@ -461,10 +461,16 @@ function renderNotesGrid() {
         h2.addEventListener("click", () => toggleCard(card));
 
         card.addEventListener("click", () => raiseCard(card));
-        card.addEventListener("touchstart", () => raiseCard(card), { passive: true });
+        // Note: raising used to also fire on touchstart, but that made the
+        // "lift" and "expand" animations run out of sync on mobile (lift
+        // starts on touch, expand starts later on click) which read as
+        // jitter. Letting click drive both keeps them in the same frame.
 
         const actions = document.createElement("div");
         actions.className = "actions";
+
+        const actionsInner = document.createElement("div");
+        actionsInner.className = "actions-inner";
 
         const previewBtn = document.createElement("button");
         previewBtn.className = "preview-btn";
@@ -484,9 +490,10 @@ function renderNotesGrid() {
         shareBtn.textContent = "🔗 Share";
         shareBtn.addEventListener("click", withTapFeedback(shareBtn, "🔗 Share", () => shareFile(note.filename)));
 
-        actions.appendChild(previewBtn);
-        actions.appendChild(downloadBtn);
-        actions.appendChild(shareBtn);
+        actionsInner.appendChild(previewBtn);
+        actionsInner.appendChild(downloadBtn);
+        actionsInner.appendChild(shareBtn);
+        actions.appendChild(actionsInner);
 
         card.appendChild(h2);
         card.appendChild(actions);
@@ -926,9 +933,9 @@ function toggleCard(card) {
 
             c.classList.remove("active");
 
-            const otherActions = c.querySelector(".actions");
-            if (otherActions) {
-                otherActions.classList.remove("overflow-visible");
+            const otherActionsInner = c.querySelector(".actions-inner");
+            if (otherActionsInner) {
+                otherActionsInner.classList.remove("overflow-visible");
             }
 
             const arrow = c.querySelector(".arrow");
@@ -946,11 +953,12 @@ function toggleCard(card) {
     const isActive = card.classList.contains("active");
 
     const actions = card.querySelector(".actions");
+    const actionsInner = card.querySelector(".actions-inner");
 
     // Keep overflow clipped while the panel grows/shrinks so the height
     // transition stays smooth, then reveal it once fully open so button
     // shadows aren't cut off by the container's edge.
-    actions.classList.remove("overflow-visible");
+    actionsInner.classList.remove("overflow-visible");
 
     if (isActive) {
 
@@ -959,13 +967,13 @@ function toggleCard(card) {
         const reveal = () => {
             if (!revealed && card.classList.contains("active")) {
                 revealed = true;
-                actions.classList.add("overflow-visible");
+                actionsInner.classList.add("overflow-visible");
             }
         };
 
         actions.addEventListener("transitionend", function onOpenEnd(e) {
 
-            if (e.propertyName !== "max-height") {
+            if (e.propertyName !== "grid-template-rows") {
                 return;
             }
 
