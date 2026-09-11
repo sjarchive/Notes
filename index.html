@@ -1,54 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Circle</title>
-<link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#0E1116" />
-<link rel="stylesheet" href="/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.Ed. I Year Notes</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    
+    <meta name="theme-color" content="#4568dc">
 </head>
 <body>
 
-  <!-- AUTH SCREEN -->
-  <div id="auth-screen" class="screen">
-    <div class="auth-card">
-      <h1 class="auth-title">Circle</h1>
-      <p class="auth-sub">One group. Everyone's in it.</p>
+<div id="splash">
 
-      <form id="auth-form">
-        <input id="auth-name" type="text" placeholder="Username (5–10 characters)" autocomplete="username" minlength="5" maxlength="10" required />
-        <input id="auth-password" type="password" placeholder="Password (8–20 chars, mixed case, number, symbol)" autocomplete="current-password" minlength="8" maxlength="20" required />
-        <button type="submit" id="auth-submit">Sign in</button>
-      </form>
+    <div class="splash-content">
 
-      <button id="auth-toggle" class="link-button">Need an account? Sign up</button>
-      <p id="auth-error" class="auth-error"></p>
+        <div class="splash-icon">📚</div>
+
+        <h1>B.Ed. I Year Notes</h1>
+
+        <p>Loading...</p>
+
     </div>
-  </div>
 
-  <!-- CHAT SCREEN -->
-  <div id="chat-screen" class="screen hidden">
-    <header class="chat-header">
-      <div class="chat-header-info">
-        <span class="chat-title">Circle</span>
-        <span class="chat-sub" id="member-count">—</span>
-      </div>
-      <button id="sign-out" class="icon-button" aria-label="Sign out">⏻</button>
-    </header>
+</div>
 
-    <main id="message-list" class="message-list"></main>
+<div class="circle c1"></div>
+<div class="circle c2"></div>
+<div class="circle c3"></div>
 
-    <form id="composer" class="composer">
-      <button type="button" id="attach-button" class="icon-button" aria-label="Attach media">📎</button>
-      <input id="attach-input" type="file" accept="image/*" class="hidden-field" />
-      <input id="message-input" type="text" placeholder="Message" autocomplete="off" />
-      <button type="submit" id="send-button" class="send-button" aria-label="Send">➤</button>
-    </form>
-  </div>
+<div class="container">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="/supabase-config.js"></script>
-  <script src="/script.js"></script>
+    <div class="top-bar">
+        <div id="profileContainer" class="profile-container hidden">
+            <button id="profileBtn" class="profile-btn" onclick="toggleProfileMenu(event)" aria-label="Account menu">👤</button>
+            <div id="profileMenu" class="profile-menu hidden-form">
+                <p id="profileUsername" class="profile-username"></p>
+                <button id="manageNotesBtn" class="profile-logout hidden-form" onclick="openManageModal()">🗂️ Manage Notes</button>
+                <button class="profile-logout" onclick="handleLogout()">🚪 Log out</button>
+            </div>
+        </div>
+        <button id="themeToggle">🌙 Dark Mode</button>
+    </div>
+
+    <!-- Home Screen -->
+    <div id="homeScreen">
+        <div class="home-icon">📚</div>
+        <h1>B.Ed. I Year Notes</h1>
+        <p class="home-subtitle">First year notes, all in one place</p>
+        <button id="enterBtn" onclick="handleEnterClick()">Enter →</button>
+    </div>
+
+    <!-- Login / Sign Up Modal -->
+    <div id="authModalOverlay" class="modal-overlay hidden-form" onclick="closeAuthModalOnOverlay(event)">
+        <div class="auth-modal" onclick="event.stopPropagation()">
+
+            <button type="button" class="modal-close" onclick="closeAuthModal()" aria-label="Close">✕</button>
+
+            <div class="auth-tabs">
+                <button type="button" id="loginTabBtn" class="auth-tab active" onclick="switchAuthTab('login')">Log In</button>
+                <button type="button" id="signupTabBtn" class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+            </div>
+
+            <form id="loginForm" class="auth-form" onsubmit="return handleLogin(event)">
+                <input type="text" id="loginUsername" placeholder="Username" autocomplete="username" required>
+                <div class="password-wrap">
+                    <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+                    <button type="button" class="toggle-password" aria-label="Show password" onclick="togglePassword('loginPassword', this)"></button>
+                </div>
+                <button type="submit" class="auth-submit">Log In</button>
+            </form>
+
+            <form id="signupForm" class="auth-form hidden-form" onsubmit="return handleSignup(event)">
+                <input type="text" id="signupUsername" placeholder="Choose a username" autocomplete="username" required>
+                <div class="password-wrap">
+                    <input type="password" id="signupPassword" placeholder="Choose a password" autocomplete="new-password" required>
+                    <button type="button" class="toggle-password" aria-label="Show password" onclick="togglePassword('signupPassword', this)"></button>
+                </div>
+                <p class="auth-hint">Username: 5–10 characters (letters, numbers, underscores).<br>Password: 8–20 characters with uppercase, lowercase, number & special character.</p>
+                <button type="submit" class="auth-submit">Sign Up</button>
+            </form>
+
+            <p id="authError" class="auth-error"></p>
+
+        </div>
+    </div>
+
+    <!-- Manage Notes Modal (admin only) -->
+    <div id="manageModalOverlay" class="modal-overlay hidden-form" onclick="closeManageModalOnOverlay(event)">
+        <div class="auth-modal" onclick="event.stopPropagation()">
+
+            <button type="button" class="modal-close" onclick="closeManageModal()" aria-label="Close">✕</button>
+
+            <h2 class="manage-title">🗂️ Manage Notes</h2>
+
+            <form id="addNoteForm" class="auth-form" onsubmit="return handleAddNote(event)">
+                <input type="text" id="newNoteTitle" placeholder="Subject title" required>
+                <input type="file" id="newNoteFile" accept="application/pdf" required>
+                <button type="submit" class="auth-submit">⬆️ Upload</button>
+            </form>
+
+            <p id="manageStatus" class="auth-error"></p>
+
+            <div id="manageNotesList" class="manage-notes-list"></div>
+
+        </div>
+    </div>
+
+    <!-- Notes Section (hidden until Enter is clicked) -->
+    <div id="notesSection" class="hidden">
+
+    <h1>📚 B.Ed. I Year Notes</h1>
+
+    <p id="subjectCount"></p>
+
+    <div class="notes-grid" id="notesGrid"></div><!-- populated dynamically by loadNotes() in script.js -->
+
+    </div><!-- end notesSection -->
+
+</div><!-- end container -->
+
+<button id="topBtn">↑</button>
+
+<div id="toast"></div>
+
+<!-- Supabase (Authentication + PDF Storage) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<script src="script.js"></script>
+    
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4d404b0e7d1d40f68e39ffc16d40ba68"}'></script>
+<!-- End Cloudflare Web Analytics -->
+
 </body>
 </html>
